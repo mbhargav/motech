@@ -1,0 +1,115 @@
+<!------------------------  History ------------------------------------->
+<div class="row">
+    <div class="margin-after history">
+        <h4 class="frame-title">{{msg('task.header.taskHistory')}} <a href="#/tasks/dashboard" type="button" class="btn btn-sm btn-primary btn-in-frame-header pull-right"><i class="icon-mail-reply icon-white"></i></a></h4>
+        <div class="tasks-list">
+            <div class="inbox-header" ng-class="{true:'', false:'paused'}[enabled]">
+                <div class="task-bar">
+                    <ul class="task-nav">
+                        <li class="task-element">
+                            <div bs-popover="{{msg(trigger.channelName)}}" data-toggle="popover" data-placement="right" data-trigger="hover">
+                                <img ng-src="../tasks/api/channel/icon?moduleName={{trigger.moduleName}}" class="task-list-img" />
+                            </div>
+                        </li>
+                        <li class="task-element"><img src="../tasks/img/arrow.png" class="task-list-img-arrow"/></li>
+                        <li class="task-element">
+                            <div ui-if="actions.length == 1" bs-popover="{{msg(actions[0].channelName)}}" data-toggle="popover" data-placement="right" data-trigger="hover">
+                                <img ng-src="../tasks/api/channel/icon?moduleName={{actions[0].moduleName}}" class="task-list-img"/>
+                            </div>
+                            <div ui-if="actions.length > 1" actions-popover>
+                                <i class="icon-folder-open-alt icon-fixed-width icon-2x task-list-img" style="vertical-align: middle;"></i>
+                            </div>
+                        </li>
+                        <li class="divider-vertical"></li>
+                        <li class="task-element task-name">
+                            <span class="name-first">{{name}}</span>
+                            <span class="name-second-history">{{msg('task.section.recentActivityForTask')}}</span>
+                        </li>
+                    </ul>
+
+                    <ul class="task-nav pull-right">
+                        <li ng-show="description && enabled" class="task-element"  bs-popover="{{description}}" data-trigger="hover" data-placement="left"><img src="../tasks/img/task-info.png"  class="task-list-img" /></li>
+                        <li ng-show="description && !enabled" class="task-element" bs-popover="{{description}}" data-trigger="hover" data-placement="left"><img src="../tasks/img/task-info-paused.png"  class="task-list-img" /></li>
+                        <li ng-show="description" class="divider-vertical"></li>
+                        <li ng-hide="enabled" class="task-element task-paused">
+                            <div class="task-list-button-activity">
+                                <div class="task-list-text-activity">{{msg('task.paused')}}</div>
+                                <div class="task-list-div-activity"><img class="task-list-img-activity" src="../tasks/img/task-paused.png" /></div>
+                            </div>
+                        </li>
+                        <li ng-show="enabled" class="task-element task-active">
+                            <div class="task-list-button-activity">
+                                <div class="task-list-div-activity"><img class="task-list-img-activity" src="../tasks/img/task-active.png" /></div>
+                                <div class="task-list-text-activity">{{msg('task.active')}}</div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="clearfix"></div><div class="margin-before2"></div>
+
+            <div class="margin-after"  ng-show="activities.length &gt; 0">
+                <div class="form-group form-inline">
+                    <label class="interval">{{msg('task.header.filterActivity')}}</label>
+                    <select class="form-control input-auto" ng-model="filterHistory" ng-change="changeFilterHistory()" ng-options="history for history in histories"></select>
+                    <label class="interval">{{msg('task.header.activitiesPerPage')}}</label>
+                    <select class="form-control input-auto" ng-model="itemsPerPage" ng-change="changeItemsPerPage()" ng-options="itemsPerPage for itemsPerPage in limitPages"></select>
+                    <a ng-click="clearHistory()" class="btn btn-danger"> {{msg('task.button.clearHistory')}}</a>
+                </div>
+                <div class="box-content clearfix" ng-hide="activities.length == 0">
+                    <table class="table table-striped table-lightblue table-bordered table-recent-activity-task table-condensed">
+                        <thead>
+                        <tr>
+                            <th>{{msg('task.subsection.status')}}</th>
+                            <th>{{msg('task.subsection.message')}}</th>
+                            <th>{{msg('task.subsection.information')}}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="activity in pagedItems[currentPage]">
+                            <td>
+                                <img ng-show="activity.activityType == 'SUCCESS'" src="../tasks/img/icon-ok.png" class="recent-activity-task-img"/>
+                                <img ng-show="activity.activityType == 'ERROR'" src="../tasks/img/icon-exclamation.png" class="recent-activity-task-img"/>
+                                <img ng-show="activity.activityType == 'WARNING'" src="../tasks/img/icon-question.png" class="recent-activity-task-img"/>
+                            </td>
+                            <td class="message-history">
+                                <p class="wrap-paragraph" ng-hide="activity.stackTraceElement.length &gt; 1">{{msg(activity.message, activity.fields)}}</p>
+                                <p class="wrap-paragraph" ng-show="activity.stackTraceElement.length &gt; 1">{{msg(activity.message, activity.fields)}}
+                                    <span class="label label-danger pointer" data-toggle="collapse" data-target="#stackHistory{{$index}}">
+                                        {{msg('task.button.showStackTrace')}}
+                                    </span>
+                                </p>
+                                <pre id="stackHistory{{$index}}" class="collapse" ng-show="activity.stackTraceElement.length &gt; 1">{{activity.stackTraceElement}}</pre>
+                            </td>
+                            <td>{{ activity.date | fromNow }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-centered" ng-show="pagedItems.length &gt; 1">
+                    <ul class="pagination pagination-sm lightblue">
+                        <li ng-class="{disabled: currentPage == 0}"><a ng-click="firstPage()">{{msg('server.pagination.first')}}</a></li>
+                        <li ng-class="{disabled: currentPage == 0}"><a ng-click="prevPage()">{{msg('server.pagination.prev')}}</a></li>
+                        <li ng-repeat="number in range(pagedItems.length)"
+                            ng-hide="hidePages(number)"
+                            ng-class="{active: number == currentPage}"
+                            ng-click="setPage()">
+                            <a ng-bind="number + 1">1</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}"><a ng-click="nextPage()">{{msg('server.pagination.next')}}</a></li>
+                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}"><a ng-click="lastPage(pagedItems.length - 1)">{{msg('server.pagination.last')}}</a></li>
+                    </ul>
+                </div>
+                <div class="alert" ng-show="activities.length == 0">
+                    <strong>{{msg('task.warning')}}:</strong>
+                    {{msg('task.info.notFoundActivities')}}
+                </div>
+            </div>
+            <div class="inside">
+                <a ng-click="clearHistory()" class="btn btn-danger"> {{msg('task.button.clearHistory')}}</a>
+                <a href="#/tasks/dashboard" class="btn btn-primary"><i class="icon-mail-reply icon-white"></i> {{msg('task.button.back')}}</a>
+            </div>
+        </div>
+    </div>
+</div>
