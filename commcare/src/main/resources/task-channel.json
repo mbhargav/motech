@@ -67,25 +67,36 @@
     },
     {
       "displayName" : "commcare.forms",
-      "subject" : "org.motechproject.commcare.api.forms",
+      "subject" : "org.motechproject.commcare.api.forms",      
       "eventParameters" : [
         {
-          "eventKey" : "elementName",
-          "displayName" : "commcare.elementName"
+          "eventKey" : "id",
+          "displayName" : "commcare.id"
         },
         {
-          "eventKey" : "subElements",
+          "eventKey" : "metadata",
           "type" : "MAP",
-          "displayName" : "commcare.subElements"
+          "displayName" : "commcare.metadata"
         },
         {
-          "eventKey" : "attributes",
-          "type" : "MAP",
-          "displayName" : "commcare.attributes"
+          "eventKey" : "receivedOn",
+          "displayName" : "commcare.receivedOn"
         },
         {
-          "eventKey" : "value",
-          "displayName" : "commcare.value"
+          "eventKey" : "type",
+          "displayName" : "commcare.type"
+        },
+        {
+          "eventKey" : "uiversion",
+          "displayName" : "commcare.uiversion"
+        },
+        {
+          "eventKey" : "version",
+          "displayName" : "commcare.version"
+        },
+        {
+          "eventKey" : "archived",
+          "displayName" : "commcare.archived"
         }
       ]
     },

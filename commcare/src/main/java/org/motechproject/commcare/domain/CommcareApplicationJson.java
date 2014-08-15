@@ -8,10 +8,10 @@ import java.util.List;
 
 @Entity(name = "Commcare Application")
 public class CommcareApplicationJson {
-	@Field(displayName = "Application ID")
+	@Field(displayName = "Application Id")
     @SerializedName("id")
-    private String id;
-	
+    private String appId;
+    
     @Field(displayName = "Application Name")
     @SerializedName("name")
     private String applicationName;
@@ -24,23 +24,19 @@ public class CommcareApplicationJson {
     @SerializedName("modules")
     private List<CommcareModuleJson> modules;
 
-    public CommcareApplicationJson(String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
+    public CommcareApplicationJson(String appId, String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
+        this.appId = appId;
         this.applicationName = applicationName;
         this.resourceUri = resourceUri;
         this.modules = modules;
     }
-    
-    public CommcareApplicationJson(String id, String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
-        this(applicationName, resourceUri, modules);
-        this.id = id;
+
+    public String getAppId() {
+        return appId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
     
     public String getApplicationName() {

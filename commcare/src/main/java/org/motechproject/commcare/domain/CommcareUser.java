@@ -106,4 +106,15 @@ public class CommcareUser {
     public void setPhoneNumbers(List<String> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
+    
+    @Override
+    public String toString() {
+    	return "ID: " + id + "<BR/>" +
+    			"First Name: " + firstName + "<BR/>" +
+    			"Last Name: " + lastName + "<BR/>" +
+    			"Username: " + username + "<BR/>" +
+    			"Email: " + email + "<BR/>" +
+    			"Phone Number: " + phoneNumbers + "<BR/>" +
+    			"User Data: " + userData + "<BR/>" ;
+    }
 }

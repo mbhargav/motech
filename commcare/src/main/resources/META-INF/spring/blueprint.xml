@@ -62,5 +62,10 @@
     <osgi:reference id="commcareApplicationDataService"
                     interface="org.motechproject.commcare.service.CommcareApplicationDataService"/>
 
+    <osgi:reference id="motechSchedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService"
+              availability="optional">
+        <osgi:reference-listener ref="commcareCronScheduler"/>
+    </osgi:reference>
+    
     <mvc:annotation-driven/>
 </beans>

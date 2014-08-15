@@ -21,6 +21,7 @@ public class SettingsDto {
     private boolean forwardFormStubs;
     @JsonProperty
     private boolean forwardAppStructure;
+    
 
     public SettingsDto() {
         this.accountSettings = new CommcareAccountSettings();
